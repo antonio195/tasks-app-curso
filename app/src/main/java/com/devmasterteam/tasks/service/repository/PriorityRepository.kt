@@ -50,5 +50,9 @@ class PriorityRepository(val context: Context) {
         return Gson().fromJson(str, String::class.java)
     }
 
+    fun list(): List<PriorityModel>{
+        return dataBase.list()
+    }
+
 
 }
