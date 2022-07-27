@@ -5,13 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.CalendarView
 import android.widget.DatePicker
 import androidx.lifecycle.ViewModelProvider
-import com.devmasterteam.tasks.R
-import com.devmasterteam.tasks.databinding.ActivityRegisterBinding
 import com.devmasterteam.tasks.databinding.ActivityTaskFormBinding
-import com.devmasterteam.tasks.viewmodel.RegisterViewModel
+import com.devmasterteam.tasks.service.model.PriorityModel
+import com.devmasterteam.tasks.service.model.TaskModel
 import com.devmasterteam.tasks.viewmodel.TaskFormViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,6 +20,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
     private lateinit var viewModel: TaskFormViewModel
     private lateinit var binding: ActivityTaskFormBinding
     private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd/mm/yyyy")
+    private var listPriority: List<PriorityModel> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +30,9 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
         binding = ActivityTaskFormBinding.inflate(layoutInflater)
 
         // Eventos
-        binding.buttonSave.setOnClickListener(this)
+        binding.buttonSave.setOnClickListener {
+            handleSave()
+        }
         binding.buttonDate.setOnClickListener {
             handleDate()
         }
@@ -64,10 +65,11 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
         DatePickerDialog(this, this, year, month, day).show()
     }
 
-    private fun observe(){
-        viewModel.priorityList.observe(this){
+    private fun observe() {
+        viewModel.priorityList.observe(this) {
+            listPriority = it
             val list = mutableListOf<String>()
-            for (priority in it){
+            for (priority in it) {
                 list.add(priority.description)
             }
             val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, list)
@@ -75,5 +77,18 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
         }
     }
 
+    private fun handleSave() {
+        val task = TaskModel().apply {
+            this.id = 0
+            this.description = binding.editDescription.text.toString()
+            this.complete = binding.checkComplete.isChecked
+            this.duoDate = binding.buttonDate.text.toString()
+
+            val index = binding.spinnerPriority.selectedItemPosition
+            this.priorityId = listPriority[index].id
+        }
+
+        viewModel.save(task)
+    }
 
 }
