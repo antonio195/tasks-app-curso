@@ -2,13 +2,11 @@ package com.devmasterteam.tasks.service.repository
 
 import android.content.Context
 import com.devmasterteam.tasks.R
-import com.devmasterteam.tasks.service.constants.TaskConstants
 import com.devmasterteam.tasks.service.listener.APIListener
 import com.devmasterteam.tasks.service.model.PriorityModel
 import com.devmasterteam.tasks.service.repository.local.TaskDatabase
 import com.devmasterteam.tasks.service.repository.remote.PrioritySerivce
 import com.devmasterteam.tasks.service.repository.remote.RetrofitClient
-import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,9 +29,7 @@ class PriorityRepository(val context: Context): BaseRepository() {
             override fun onFailure(call: Call<List<PriorityModel>>, t: Throwable) {
                 listener.onFailure(context.getString(R.string.ERROR_UNEXPECTED))
             }
-
         })
-
     }
 
     fun save(list: List<PriorityModel>){

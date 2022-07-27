@@ -25,7 +25,6 @@ class TaskRepository(val context: Context) : BaseRepository() {
             }
 
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                val s = ""
                 listener.onFailure(context.getString(R.string.ERROR_UNEXPECTED))
             }
 
