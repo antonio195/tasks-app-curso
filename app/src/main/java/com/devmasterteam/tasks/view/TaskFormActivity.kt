@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.devmasterteam.tasks.databinding.ActivityTaskFormBinding
 import com.devmasterteam.tasks.service.model.PriorityModel
@@ -19,7 +20,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
 
     private lateinit var viewModel: TaskFormViewModel
     private lateinit var binding: ActivityTaskFormBinding
-    private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd/mm/yyyy")
+    private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
     private var listPriority: List<PriorityModel> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,10 +47,9 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onClick(v: View) {
-        TODO("Not yet implemented")
     }
 
-    override fun onDateSet(v: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+    override fun onDateSet(v: DatePicker, year: Int, month: Int, dayOfMonth: Int) {
         val calendar = Calendar.getInstance()
         calendar.set(year, month, dayOfMonth)
 
@@ -75,6 +75,18 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
             val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, list)
             binding.spinnerPriority.adapter = adapter
         }
+
+        viewModel.taskSave.observe(this){
+            if (it.status()){
+                toast("Sucesso")
+            }else{
+                toast(it.message())
+            }
+        }
+    }
+
+    private fun toast(message: String){
+        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun handleSave() {

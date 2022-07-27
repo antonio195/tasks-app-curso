@@ -69,7 +69,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 override fun onFailure(message: String) {
-                    val s = ""
                 }
 
             })
